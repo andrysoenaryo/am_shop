@@ -22,7 +22,7 @@
                 <div class="form-group">
                     <div class="col-sm-4">
                         <div class="form-material form-material-info ">
-                            <input class="js-datepicker form-control" type="text" id="tgl_trx" name="tgl_trx" data-date-format="yyyy-mm-dd" placeholder="YYYY-MM-DD" >                                                    
+                            <input required class="js-datepicker form-control input-sm" type="text" id="tgl_trx" name="tgl_trx" data-date-format="yyyy-mm-dd" placeholder="YYYY-MM-DD" >                                                    
                             <label for="tgl_trx">Tanggal</label>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
             	<div class="form-group">-->
                     <div class="col-sm-4">
                         <div class="form-material form-material-info ">
-                            <select class="js-select2 form-control" id="nama_toko" name="nama_toko" style="width: 100%;" data-placeholder="Pilih Toko..">
+                            <select required class="js-select2 form-control input-sm" id="nama_toko" name="nama_toko" style="width: 100%;" data-placeholder="Pilih Toko..">
                                 <option></option><!-- Required for data-placeholder attribute to work with Chosen plugin -->
                                 <option value="1">HTML</option>
                                 <option value="2">CSS</option>
@@ -47,8 +47,8 @@
                 </div>
                 <div class="form-group">
                     <div class="col-sm-4">
-                        <div class="form-material form-material-info ">
-                            <input class="form-control" type="text" id="inv_trx" name="inv_trx" >
+                        <div required class="form-material form-material-info ">
+                            <input class="form-control input-sm" type="text" id="inv_trx" name="inv_trx" >
                             <label for="inv_trx">Invoice Tokopedia</label>
                         </div>
                     </div>
@@ -56,26 +56,34 @@
                 <!--</div>
                 <div class="form-group">-->
                     <div class="col-sm-4">
-                        <div class="form-material form-material-info ">
-                            <input class="form-control" type="text" id="nama" name="nama" >
+                        <div required class="form-material form-material-info ">
+                            <input class="form-control input-sm" type="text" id="nama" name="nama" >
                             <label for="nama">Nama Pembeli</label>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-4">
+                    <div required class="col-sm-4">
                         <div class="form-material form-material-info ">
-                            <textarea class="form-control" id="alamat" name="alamat" rows="3" placeholder="Isi Alamat..."></textarea>
+                            <textarea class="form-control input-sm" id="alamat" name="alamat" rows="3" placeholder="Isi Alamat..."></textarea>
                             <label for="alamat">Alamat</label>
                         </div>
                     </div>
                     <div class="col-sm-2"></div>
                 <!--</div>
                 <div class="form-group">-->
-                    <div class="col-sm-4">
+                    <div required class="col-sm-4">
                         <div class="form-material form-material-info ">
-                            <input type="text" class="form-control" id="no_hp" name="no_hp" >
+                            <input type="text" class="form-control input-sm" id="no_hp" name="no_hp" >
                             <label for="no_hp">No Handphone</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-10">
+                        <div class="form-material form-material-info ">
+                            <input type="text" class="form-control input-sm" id="no_resi" name="no_resi" >
+                            <label for="no_resi">No Resi</label>
                         </div>
                     </div>
                 </div>
@@ -105,9 +113,82 @@
                 </div>
             <!--</form>-->
             </div> 
-            <div>
-            sdgvsdvgs
-            </div>           
+            <div class="col-sm-12">
+                <table class="table table-striped table-borderless table-header-bg table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-center" valign="middle" style="width: 100px; vertical-align:central;">
+                                <a href="javascript:;" onClick="return addRow()"  class="addRow btn-sm btn-success"> <i class="glyphicon glyphicon-plus"></i></a>
+                                <a href="javascript:;" onClick="return removeRow()" class="removeRow btn-sm btn-danger"> <i class="glyphicon glyphicon-minus"></i></a>
+                            </th>
+                            <th>Product</th>
+                            <th class="hidden-xs" style="width: 15%;">Supplier</th>
+                            <th class="hidden-xs" style="width: 100px;">Harga Supplier</th>
+                            <th class="text-center" style="width: 100px;">Harga Jual</th>
+                            <th class="text-center" style="width: 100px;">Qty</th>
+                            <th class="hidden-xs" style="width: 100px;">Nominal Refund</th>
+                            <th class="hidden-xs" style="width: 70px;">Status</th>
+                            <th class="hidden-xs" style="width: 70px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center">1</td>
+                            <td class="text-left">Buku Tulis</td>
+                            <td class="hidden-xs">Jasa Kantor</td>
+                            <td class="hidden-xs">1.000.000</td>
+                            <td class="text-right">1.200.000</td>
+                            <td class="text-right">50</td>
+                            <td class="hidden-xs">0</td>
+                            <td class="hidden-xs">
+                                <span class="label label-info">Success</span>
+                            </td>
+                            <td class="hidden-xs">
+                                <div class="btn-group">
+                                    <button class="btn btn-xs btn-default" type="button" data-toggle="tooltip" title="Edit Client"><i class="fa fa-pencil"></i></button>
+                                    <button class="btn btn-xs btn-default" type="button" data-toggle="tooltip" title="Remove Client"><i class="fa fa-times"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">2</td>
+                            <td class="text-left">Buku Tulis</td>
+                            <td class="hidden-xs">Jasa Kantor</td>
+                            <td class="hidden-xs">1.000.000</td>
+                            <td class="text-right">1.200.000</td>
+                            <td class="text-right">50</td>
+                            <td class="hidden-xs">0</td>
+                            <td class="hidden-xs">
+                                <span class="label label-danger">Cancel</span>
+                            </td>
+                            <td class="hidden-xs">
+                                <div class="btn-group">
+                                    <button class="btn btn-xs btn-default" type="button" data-toggle="tooltip" title="Edit Client"><i class="fa fa-pencil"></i></button>
+                                    <button class="btn btn-xs btn-default" type="button" data-toggle="tooltip" title="Remove Client"><i class="fa fa-times"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">3</td>
+                            <td class="text-left">Buku Tulis</td>
+                            <td class="hidden-xs">Jasa Kantor</td>
+                            <td class="hidden-xs">1.000.000</td>
+                            <td class="text-right">1.200.000</td>
+                            <td class="text-right">50</td>
+                            <td class="hidden-xs">500.000</td>
+                            <td class="hidden-xs">
+                                <span class="label label-warning">Refund</span>
+                            </td>
+                            <td class="hidden-xs">
+                                <div class="btn-group">
+                                    <button class="btn btn-xs btn-default" type="button" data-toggle="tooltip" title="Edit Client"><i class="fa fa-pencil"></i></button>
+                                    <button class="btn btn-xs btn-default" type="button" data-toggle="tooltip" title="Remove Client"><i class="fa fa-times"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                   </tbody>
+                </table>
+            </div>          
         </div>
     </div>
 
