@@ -114,12 +114,23 @@
             <!--</form>-->
             </div> 
             <div class="col-sm-12">
+            	<div class="col-sm-9">
+                    <div id='add_div'>
+                    <?php if($_SESSION['menu'][$_GET['id_menu']]['tambah']=='Y'){ $disable_tambah = '';}else{ $disable_tambah = 'disabled';}?>
+                        <button <?php echo $disable_tambah;?> class="btn btn-sm btn-primary" onClick="action_list('simpan');"> Simpan </button>
+                        <button class="btn btn-sm btn-danger" onClick="action_list('back');"> Batal </button>
+                    </div>
+                    <div id='edit_div' style="display:none;">
+                        <button class="btn btn-sm btn-primary" onClick="action_list('simpan');"> Edit </button>
+                        <button class="btn btn-sm btn-danger" onClick="action_list('back');"> Batal </button>
+                    </div>
+                </div>
                 <table class="table table-striped table-borderless table-header-bg table-bordered">
                     <thead>
                         <tr>
-                            <th class="text-center" valign="middle" style="width: 100px; vertical-align:central;">
-                                <a href="javascript:;" onClick="return addRow()"  class="addRow btn-sm btn-success"> <i class="glyphicon glyphicon-plus"></i></a>
-                                <a href="javascript:;" onClick="return removeRow()" class="removeRow btn-sm btn-danger"> <i class="glyphicon glyphicon-minus"></i></a>
+                            <th class="text-center" valign="middle" style="width: 80px; vertical-align:central;">
+                                <a href="#" onClick="return addRow()"  class="addRow btn-sm btn-success"> <i class="glyphicon glyphicon-plus"></i></a>
+                                <a href="#" onClick="return removeRow()"  style="display:none" class="removeRow btn-sm btn-danger"> <i class="glyphicon glyphicon-minus"></i></a>
                             </th>
                             <th>Product</th>
                             <th class="hidden-xs" style="width: 15%;">Supplier</th>
@@ -131,65 +142,13 @@
                             <th class="hidden-xs" style="width: 70px;">Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td class="text-center">1</td>
-                            <td class="text-left">Buku Tulis</td>
-                            <td class="hidden-xs">Jasa Kantor</td>
-                            <td class="hidden-xs">1.000.000</td>
-                            <td class="text-right">1.200.000</td>
-                            <td class="text-right">50</td>
-                            <td class="hidden-xs">0</td>
-                            <td class="hidden-xs">
-                                <span class="label label-info">Success</span>
-                            </td>
-                            <td class="hidden-xs">
-                                <div class="btn-group">
-                                    <button class="btn btn-xs btn-default" type="button" data-toggle="tooltip" title="Edit Client"><i class="fa fa-pencil"></i></button>
-                                    <button class="btn btn-xs btn-default" type="button" data-toggle="tooltip" title="Remove Client"><i class="fa fa-times"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-center">2</td>
-                            <td class="text-left">Buku Tulis</td>
-                            <td class="hidden-xs">Jasa Kantor</td>
-                            <td class="hidden-xs">1.000.000</td>
-                            <td class="text-right">1.200.000</td>
-                            <td class="text-right">50</td>
-                            <td class="hidden-xs">0</td>
-                            <td class="hidden-xs">
-                                <span class="label label-danger">Cancel</span>
-                            </td>
-                            <td class="hidden-xs">
-                                <div class="btn-group">
-                                    <button class="btn btn-xs btn-default" type="button" data-toggle="tooltip" title="Edit Client"><i class="fa fa-pencil"></i></button>
-                                    <button class="btn btn-xs btn-default" type="button" data-toggle="tooltip" title="Remove Client"><i class="fa fa-times"></i></button>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-center">3</td>
-                            <td class="text-left">Buku Tulis</td>
-                            <td class="hidden-xs">Jasa Kantor</td>
-                            <td class="hidden-xs">1.000.000</td>
-                            <td class="text-right">1.200.000</td>
-                            <td class="text-right">50</td>
-                            <td class="hidden-xs">500.000</td>
-                            <td class="hidden-xs">
-                                <span class="label label-warning">Refund</span>
-                            </td>
-                            <td class="hidden-xs">
-                                <div class="btn-group">
-                                    <button class="btn btn-xs btn-default" type="button" data-toggle="tooltip" title="Edit Client"><i class="fa fa-pencil"></i></button>
-                                    <button class="btn btn-xs btn-default" type="button" data-toggle="tooltip" title="Remove Client"><i class="fa fa-times"></i></button>
-                                </div>
-                            </td>
-                        </tr>
+                    <tbody class="bodyadd">
                    </tbody>
                 </table>
             </div>          
         </div>
+    </div>
+    <div id="content1">
     </div>
 
 
@@ -218,6 +177,116 @@
 </script>
 
 <script>
+
+function addRow()
+{
+		var count_length = count_list();
+		var rownum = count_list()-1;
+		if(count_length > 1){
+			$('.removeRow').show();
+		}
+		
+			var data = '<tr class="list">\
+				<td class="text-center">'+count_length+'</td>\
+				<td class="text-left"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="product['+rownum+']" name="product[]" ></div></td>\
+				<td class="text-left"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="supplier['+rownum+']" name="supplier[]" ></div></td>\
+				<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="hrg_supplier['+rownum+']" name="hrg_supplier[]" ></div></td>\
+				<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="hrg_jual['+rownum+']" name="hrg_jual[]" ></div></td>\
+				<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="qty['+rownum+']" name="qty[]" ></div></td>\
+				<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="refund['+rownum+']" name="refund[]" ></div></td>\
+				<td class="hidden-xs">\
+					<div class="form-material form-material-info ">\
+                            <select required class="js-select2 form-control input-sm" id="status['+rownum+']" name="status['+rownum+']" style="width: 100%;">\
+                                <option value=""></option>\
+                                <option value="success">Success</option>\
+                                <option value="cancel">Cancel</option>\
+                                <option value="refund">Refund</option>\
+                            </select>\
+					</div>\
+				</td>\
+				<td class="hidden-xs">\
+					<div class="btn-group">\
+						<button class="btn btn-xs btn-default" type="button" data-toggle="tooltip" title="Edit Client"><i class="fa fa-pencil"></i></button>\
+						<button class="btn btn-xs btn-default" type="button" data-toggle="tooltip" title="Remove Client"><i class="fa fa-times"></i></button>\
+					</div>\
+				</td>\
+			</tr>';
+		
+		$(".bodyadd").append(data);
+		App.initHelpers(['datepicker','select2']);
+		
+	}
+	function removeRow(){
+		$('.list').slice(-1).remove();
+		if(count_list() < 2){
+			$('.removeRow').hide();
+			return false;
+		}
+	}
+	
+	function count_list(){
+		var length_list = $('.list').length;
+		if( length_list == 1 ){ 
+			$('.removeRow').hide();	
+		}
+		return length_list;
+	}
+
+function action_list(act)
+{
+	
+	var products = $('input[name="product[]"]').map(function(){ 
+						return this.value; 
+					}).get();
+	
+	var suppliers = $('input[name="supplier[]"]').map(function(){ 
+						return this.value; 
+					}).get();
+					
+	var hrg_suppliers = $('input[name="hrg_supplier[]"]').map(function(){ 
+						return this.value; 
+					}).get();
+					
+	var hrg_juals = $('input[name="hrg_jual[]"]').map(function(){ 
+						return this.value; 
+					}).get();
+					
+	var qtys = $('input[name="qty[]"]').map(function(){ 
+						return this.value; 
+					}).get();
+					
+	var refunds = $('input[name="refund[]"]').map(function(){ 
+						return this.value; 
+					}).get();
+					
+	var URL = 'transaksi/model/mod_transaksi_jual.php';
+	var act = act;
+	
+	$.ajax({
+		type: 'POST',
+		url: URL,
+		data: {
+			 'product[]'		: products,
+			 'supplier[]'		: suppliers,
+			 'hrg_supplier[]'	: hrg_suppliers,
+			 'hrg_jual[]'		: hrg_juals,
+			 'qty[]'			: qtys,
+			 'refund[]'			: refunds
+		},
+		dataType: 'json',
+		cache: false,
+		success: function(result) {
+			
+			for(var a = 0; a< result['product'].length; a++)
+			{
+				alert(result['product'][a]);
+				//$('#content1').html(result[0]);
+			}
+		},
+	});
+}
+
+
 $(function() {
 	
 	$('#table_toko').bootstrapTable({

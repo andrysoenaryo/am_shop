@@ -9,7 +9,7 @@
 	$data = array();
 
 
-	if(isset($_GET['grid_table']))
+	/*if(isset($_GET['grid_table']))
 	{
 
 		$sql = "select * from toko where username = '".$_SESSION['system']['username']."' or 'superuser' = '".$_SESSION['system']['username']."'";
@@ -118,7 +118,12 @@
 		
 		$data['message'] = $message;
 		$data['error'] = $error;
-	}
+	}*/
+	
+	//$data = $_POST;
+	
+	$data['product'] = array();
+	$data['product'] = $_POST['product'];
 	
 echo json_encode($data);
 ?>
