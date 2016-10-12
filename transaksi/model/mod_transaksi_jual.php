@@ -33,20 +33,20 @@
 		}
 	
 	}
-	else if(isset($_GET['delete']))
+	else*/ if(isset($_GET['delete']))
 	{
 		
-		$delete = "delete from toko where toko_id = '".$_GET['toko_id']."'";
+		$delete = "delete from transaksi where transaksi_id = '".$_GET['transaksi_id']."'";
 		$conn->query($delete);
 		$exe = $conn->execute();
 		if($exe)
 		{
-			$message = "Sucess Delete Toko";
+			$message = "Sucess Delete Transaksi";
 			$error = false;				
 		}
 		else
 		{
-			$message = "Gagal Delete Toko";
+			$message = "Gagal Delete Transaksi";
 			$error = true;
 			
 		}
@@ -58,7 +58,7 @@
 	else if(isset($_GET['edit']))
 	{
 		
-		$sql = "select * from toko where toko_id = '".$_GET['toko_id']."'";
+		$sql = "select * from transaksi where transaksi_id = '".$_GET['transaksi_id']."'";
 		$conn->query($sql);
 		$data = $conn->resultone();
 		
@@ -68,19 +68,25 @@
 		
 		if($_GET['status']=='edit')
 		{
-			$update = "UPDATE toko SET nama_toko = '".$_GET['nama_toko']."', 
-										isactive = '".$_GET['isactive']."' 
-						WHERE toko_id = '".$_GET['toko_id']."'";
+			$update = "UPDATE transaksi SET 
+										tgl_trx = '".$_GET['tgl_trx']."', 
+										toko_id = '".$_GET['toko_id']."', 
+										inv_trx = '".$_GET['inv_trx']."', 
+										nama = '".$_GET['nama']."', 
+										alamat = '".$_GET['alamat']."', 
+										no_hp = '".$_GET['no_hp']."', 
+										no_resi  = '".$_GET['no_resi']."'
+						WHERE transaksi_id = '".$_GET['transaksi_id']."'";
 			$conn->query($update);
 			$exe = $conn->execute();
 			if($exe)
 			{
-				$message = "Sucess Update Toko";
+				$message = "Sucess Update Transaksi";
 				$error = false;				
 			}
 			else
 			{
-				$message = "Gagal Update Toko";
+				$message = "Gagal Update Transaksi";
 				$error = true;
 				
 			}
@@ -88,29 +94,29 @@
 		else
 		{
 			
-			$prefix = 'TKO'; 
-			$sql = "select max(toko_id) as maxno from toko where toko_id like '".$prefix."%'";
+			$prefix = 'TRX'; 
+			$sql = "select max(transaksi_id) as maxno from transaksi where transaksi_id like '".$prefix."%'";
 			$conn->query($sql);
 			$getmax = $conn->resultone();			
 			
 			if($getmax) 
 			{
 				if($getmax['maxno']){ $maxid = intval(substr($getmax['maxno'],-3))+1;}else{$maxid = 1;}				
-				$toko_id = $prefix.str_pad($maxid, 3,"0",STR_PAD_LEFT);
+				$transaksi_id = $prefix.str_pad($maxid, 3,"0",STR_PAD_LEFT);
 			}
 			
 			
-			$insert = "INSERT INTO toko ( toko_id, nama_toko ,username) VALUES ( '".$toko_id."', '".$_GET['nama_toko']."', '".$_SESSION['system']['username']."' )";
+			$insert = "INSERT INTO transaksi ( transaksi_id, tgl_trx, toko_id, inv_trx, nama, alamat, no_hp, no_resi ,username) VALUES ( '".$transaksi_id."', '".$_GET['tgl_trx']."', '".$_GET['toko_id']."', '".$_GET['inv_trx']."', '".$_GET['nama']."', '".$_GET['alamat']."', '".$_GET['no_hp']."', '".$_GET['no_resi']."', '".$_SESSION['system']['username']."' )";
 			$conn->query($insert);
 			$exe = $conn->execute();
 			if($exe)
 			{
-				$message = "Sucess Insert Toko";
+				$message = "Sucess Insert Transaksi";
 				$error = false;				
 			}
 			else
 			{
-				$message = "Gagal Insert Toko";
+				$message = "Gagal Insert Transaksi";
 				$error = true;
 				
 			}			
@@ -118,12 +124,38 @@
 		
 		$data['message'] = $message;
 		$data['error'] = $error;
-	}*/
-	
-	//$data = $_POST;
-	
-	$data['product'] = array();
-	$data['product'] = $_POST['product'];
+		$data['transaksi_id'] = $transaksi_id;
+	}
+	else if(isset($_GET['simpan_list']))
+ 	{
+	 	if($_GET['status_list']=='edit')
+		{
+			
+		}
+		else
+		{
+			for($i=0;$i<=count($_POST['product']);$i++)
+			{
+				
+				$insert = "INSERT INTO transaksi_detail ( transaksi_id, transaksi_detail_id, product, supplier, harga_supplier, harga_jual, qty, refund) VALUES 
+														( '".$transaksi_id."', '".$_GET['tgl_trx']."', '".$_GET['toko_id']."', '".$_GET['inv_trx']."', '".$_GET['nama']."', '".$_GET['alamat']."', '".$_GET['no_hp']."', '".$_GET['no_resi']."', '".$_SESSION['system']['username']."' )";
+				$conn->query($insert);
+				$exe = $conn->execute();
+				if($exe)
+				{
+					$message = "Sucess Insert Transaksi";
+					$error = false;				
+				}
+				else
+				{
+					$message = "Gagal Insert Transaksi";
+					$error = true;
+					
+				}
+			}
+		}
+	 
+ 	}
 	
 echo json_encode($data);
 ?>

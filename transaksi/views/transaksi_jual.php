@@ -12,7 +12,7 @@
     </div>
     <div class="block-content tab-content">
         <div class="tab-pane active" id="tab-list">
-            <div class="table-responsive"><table id="table_trx_jual" ></table></div>
+            <div class="table-responsive"><table id="table_transaksi" ></table></div>
         </div>
         <div class="tab-pane" id="tab-form">
             <div id="form" class="form-horizontal push-10-t">
@@ -31,7 +31,7 @@
             	<div class="form-group">-->
                     <div class="col-sm-4">
                         <div class="form-material form-material-info ">
-                            <select required class="js-select2 form-control input-sm" id="nama_toko" name="nama_toko" style="width: 100%;" data-placeholder="Pilih Toko..">
+                            <select required class="js-select2 form-control input-sm" id="toko_id" name="toko_id" style="width: 100%;" data-placeholder="Pilih Toko..">
                                 <option></option><!-- Required for data-placeholder attribute to work with Chosen plugin -->
                                 <option value="1">HTML</option>
                                 <option value="2">CSS</option>
@@ -41,7 +41,7 @@
                                 <option value="6">Ruby</option>
                                 <option value="7">AngularJS</option>
                             </select>
-                            <label for="nama_toko">Nama Toko</label>
+                            <label for="toko_id">Nama Toko</label>
                         </div>
                     </div>
                 </div>
@@ -87,17 +87,6 @@
                         </div>
                     </div>
                 </div>
-                <!--<div class="form-group">
-                    <div class="col-sm-6">
-                        <div class="form-material  form-material-info ">
-                            <select class="js-select2 form-control" id="isactive" name="isactive" size="1">
-                            	<option value="Y">Yes</option>
-                                <option value="N">No</option>
-                            </select>
-                            <label for="isactive">Active</label>
-                        </div>
-                    </div>
-                </div>-->
                 <div class="form-group">
                     <div class="col-sm-9">
                     	<div id='add_div'>
@@ -113,7 +102,7 @@
                 </div>
             <!--</form>-->
             </div> 
-            <div class="col-sm-12">
+            <div id="trx_detail" class="col-sm-12" style="display:none;">
             	<div class="col-sm-9">
                     <div id='add_div'>
                     <?php if($_SESSION['menu'][$_GET['id_menu']]['tambah']=='Y'){ $disable_tambah = '';}else{ $disable_tambah = 'disabled';}?>
@@ -125,6 +114,7 @@
                         <button class="btn btn-sm btn-danger" onClick="action_list('back');"> Batal </button>
                     </div>
                 </div>
+                <br>
                 <table class="table table-striped table-borderless table-header-bg table-bordered">
                     <thead>
                         <tr>
@@ -148,8 +138,7 @@
             </div>          
         </div>
     </div>
-    <div id="content1">
-    </div>
+
 
 
 <!--<script src="<?php echo $one->assets_folder; ?>/js/app.js"></script>-->
@@ -216,21 +205,23 @@ function addRow()
 		App.initHelpers(['datepicker','select2']);
 		
 	}
-	function removeRow(){
-		$('.list').slice(-1).remove();
-		if(count_list() < 2){
-			$('.removeRow').hide();
-			return false;
-		}
+function removeRow()
+{
+	$('.list').slice(-1).remove();
+	if(count_list() < 2){
+		$('.removeRow').hide();
+		return false;
 	}
-	
-	function count_list(){
-		var length_list = $('.list').length;
-		if( length_list == 1 ){ 
-			$('.removeRow').hide();	
-		}
-		return length_list;
+}
+
+function count_list()
+{
+	var length_list = $('.list').length;
+	if( length_list == 1 ){ 
+		$('.removeRow').hide();	
 	}
+	return length_list;
+}
 
 function action_list(act)
 {
@@ -271,7 +262,9 @@ function action_list(act)
 			 'hrg_supplier[]'	: hrg_suppliers,
 			 'hrg_jual[]'		: hrg_juals,
 			 'qty[]'			: qtys,
-			 'refund[]'			: refunds
+			 'refund[]'			: refunds,
+			 'status_list'		: 'add_list',
+			 'simpan_list'		: 1
 		},
 		dataType: 'json',
 		cache: false,
@@ -319,15 +312,19 @@ $(function() {
 
 function clearAll()
 {
-	$("#toko_id").val('');	
-	$("#nama_toko").val('');
-	$("#isactive").val('');
-	$("#status").val('');
+	$("#toko_id").val();
+	$("#tgl_trx").val();
+	$("#inv_trx").val();
+	$("#nama").val();
+	$("#alamat").val();
+	$("#no_hp").val();
+	$("#no_resi").val();
+	$("#status").val();
 }
 
 function action(act,tab,id)
 {
-	var URL = 'admin_toko/model/mod_toko.php';
+	var URL = 'transaksi/model/mod_transaksi_jual.php';
 	var act = act;
 	if(act=='back')
 	{
@@ -344,7 +341,7 @@ function action(act,tab,id)
 			dataType: 'json',
 			data:{
 				"edit"		: 1,
-				"toko_id"	: id	
+				"table_transaksi"	: id	
 			},
 			success:function(data){				
 				nextTabs();
@@ -366,8 +363,12 @@ function action(act,tab,id)
 			data:{
 				'simpan'	: 1,
 				'toko_id'	: $("#toko_id").val(),
-				'nama_toko'	: $("#nama_toko").val(),
-				'isactive'	: $("#isactive").val(),
+				'tgl_trx'	: $("#tgl_trx").val(),
+				'inv_trx'	: $("#inv_trx").val(),
+				'nama'		: $("#nama").val(),
+				'alamat'	: $("#alamat").val(),
+				'no_hp'		: $("#no_hp").val(),
+				'no_resi'	: $("#no_resi").val(),
 				'status'	: $("#status").val()
 			},
 			success:function(data){				
@@ -377,10 +378,21 @@ function action(act,tab,id)
 					alertMSG('danger',data.message);
 				}else{
 					alertMSG('success',data.message);
+					
+					$("#transaksi_id").val(data.transaksi_id);
+					$("#trx_detail").css('display', 'block');
+					$("#toko_id").prop('disabled', true);
+					$("#tgl_trx").prop('disabled', true);
+					$("#inv_trx").prop('readonly', true);
+					$("#nama").prop('readonly', true);
+					$("#alamat").prop('readonly', true);;
+					$("#no_hp").prop('readonly', true);
+					$("#no_resi").prop('readonly', true);
+					
 				}
-				backTabs();
-				$('#table_toko').bootstrapTable('refresh');
-				clearAll();
+				//backTabs();
+				//$('#table_transaksi').bootstrapTable('refresh');
+				//clearAll();
 			}
 		});	
 	}
@@ -392,7 +404,7 @@ function action(act,tab,id)
 			dataType: 'json',
 			data:{
 				'delete'	: 1,
-				'toko_id'	: id
+				'transaksi_id'	: id
 			},
 			success:function(data){				
 				if(data.error)
@@ -402,7 +414,7 @@ function action(act,tab,id)
 					alertMSG('success',data.message);
 				}
 				backTabs();
-				$('#table_toko').bootstrapTable('refresh');
+				$('#table_transaksi').bootstrapTable('refresh');
 				clearAll();
 			}
 		});	
