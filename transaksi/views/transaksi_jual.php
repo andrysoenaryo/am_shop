@@ -103,7 +103,29 @@
             <!--</form>-->
             </div> 
             <div id="trx_detail" class="col-sm-12" style="display:none;">
-            	<div class="col-sm-9">
+            	<div class="col-sm-12">
+                    <table class="table table-striped table-borderless table-header-bg table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center" valign="middle" style="width: 80px; vertical-align:central;">
+                                    <a href="#" onClick="return addRow()"  class="addRow btn-sm btn-success"> <i class="glyphicon glyphicon-plus"></i></a>
+                                    <a href="#" onClick="return removeRow()"  style="display:none" class="removeRow btn-sm btn-danger"> <i class="glyphicon glyphicon-minus"></i></a>
+                                </th>
+                                <th>Product</th>
+                                <th class="hidden-xs" style="width: 15%;">Supplier</th>
+                                <th class="hidden-xs" style="width: 100px;">Harga Supplier</th>
+                                <th class="text-center" style="width: 100px;">Harga Jual</th>
+                                <th class="text-center" style="width: 100px;">Qty</th>
+                                <th class="hidden-xs" style="width: 100px;">Nominal Refund</th>
+                                <th class="hidden-xs" style="width: 70px;">Status</th>
+                                <th class="hidden-xs" style="width: 70px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bodyadd">
+                       </tbody>
+                    </table>
+                </div>
+                <div class="col-sm-12" align="right">
                     <div id='add_div'>
                     <?php if($_SESSION['menu'][$_GET['id_menu']]['tambah']=='Y'){ $disable_tambah = '';}else{ $disable_tambah = 'disabled';}?>
                         <button <?php echo $disable_tambah;?> class="btn btn-sm btn-primary" onClick="action_list('simpan');"> Simpan </button>
@@ -114,27 +136,6 @@
                         <button class="btn btn-sm btn-danger" onClick="action_list('back');"> Batal </button>
                     </div>
                 </div>
-                <br>
-                <table class="table table-striped table-borderless table-header-bg table-bordered">
-                    <thead>
-                        <tr>
-                            <th class="text-center" valign="middle" style="width: 80px; vertical-align:central;">
-                                <a href="#" onClick="return addRow()"  class="addRow btn-sm btn-success"> <i class="glyphicon glyphicon-plus"></i></a>
-                                <a href="#" onClick="return removeRow()"  style="display:none" class="removeRow btn-sm btn-danger"> <i class="glyphicon glyphicon-minus"></i></a>
-                            </th>
-                            <th>Product</th>
-                            <th class="hidden-xs" style="width: 15%;">Supplier</th>
-                            <th class="hidden-xs" style="width: 100px;">Harga Supplier</th>
-                            <th class="text-center" style="width: 100px;">Harga Jual</th>
-                            <th class="text-center" style="width: 100px;">Qty</th>
-                            <th class="hidden-xs" style="width: 100px;">Nominal Refund</th>
-                            <th class="hidden-xs" style="width: 70px;">Status</th>
-                            <th class="hidden-xs" style="width: 70px;">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bodyadd">
-                   </tbody>
-                </table>
             </div>          
         </div>
     </div>
@@ -169,42 +170,42 @@
 
 function addRow()
 {
-		var count_length = count_list();
-		var rownum = count_list()-1;
-		if(count_length > 1){
-			$('.removeRow').show();
-		}
-		
-			var data = '<tr class="list">\
-				<td class="text-center">'+count_length+'</td>\
-				<td class="text-left"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="product['+rownum+']" name="product[]" ></div></td>\
-				<td class="text-left"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="supplier['+rownum+']" name="supplier[]" ></div></td>\
-				<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="hrg_supplier['+rownum+']" name="hrg_supplier[]" ></div></td>\
-				<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="hrg_jual['+rownum+']" name="hrg_jual[]" ></div></td>\
-				<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="qty['+rownum+']" name="qty[]" ></div></td>\
-				<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="refund['+rownum+']" name="refund[]" ></div></td>\
-				<td class="hidden-xs">\
-					<div class="form-material form-material-info ">\
-                            <select required class="js-select2 form-control input-sm" id="status['+rownum+']" name="status['+rownum+']" style="width: 100%;">\
-                                <option value=""></option>\
-                                <option value="success">Success</option>\
-                                <option value="cancel">Cancel</option>\
-                                <option value="refund">Refund</option>\
-                            </select>\
-					</div>\
-				</td>\
-				<td class="hidden-xs">\
-					<div class="btn-group">\
-						<button class="btn btn-xs btn-default" type="button" data-toggle="tooltip" title="Edit Client"><i class="fa fa-pencil"></i></button>\
-						<button class="btn btn-xs btn-default" type="button" data-toggle="tooltip" title="Remove Client"><i class="fa fa-times"></i></button>\
-					</div>\
-				</td>\
-			</tr>';
-		
-		$(".bodyadd").append(data);
-		App.initHelpers(['datepicker','select2']);
-		
+	var count_length = count_list();
+	var rownum = count_list()-1;
+	if(count_length > 1){
+		$('.removeRow').show();
 	}
+		
+	var data = '<tr class="list">\
+		<td class="text-center">'+count_length+'</td>\
+		<td class="text-left"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="product['+rownum+']" name="product[]" ></div></td>\
+		<td class="text-left"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="supplier['+rownum+']" name="supplier[]" ></div></td>\
+		<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="hrg_supplier['+rownum+']" name="hrg_supplier[]" ></div></td>\
+		<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="hrg_jual['+rownum+']" name="hrg_jual[]" ></div></td>\
+		<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="qty['+rownum+']" name="qty[]" ></div></td>\
+		<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="refund['+rownum+']" name="refund[]" ></div></td>\
+		<td class="hidden-xs">\
+			<div class="form-material form-material-info ">\
+					<select required class="js-select2 form-control input-sm" id="status['+rownum+']" name="status['+rownum+']" style="width: 100%;">\
+						<option value=""></option>\
+						<option value="success">Success</option>\
+						<option value="cancel">Cancel</option>\
+						<option value="refund">Refund</option>\
+					</select>\
+			</div>\
+		</td>\
+		<td class="hidden-xs">\
+			<div class="btn-group">\
+				<button class="btn btn-xs btn-default" type="button" data-toggle="tooltip" title="Remove Client" ><i class="fa fa-times"></i></button>\
+			</div>\
+		</td>\
+	</tr>';
+		
+	$(".bodyadd").append(data);
+	App.initHelpers(['datepicker','select2']);
+		
+}
+
 function removeRow()
 {
 	$('.list').slice(-1).remove();
@@ -221,6 +222,34 @@ function count_list()
 		$('.removeRow').hide();	
 	}
 	return length_list;
+}
+
+function list_data_detail(transaksi_id)
+{
+	var URL = 'transaksi/model/mod_transaksi_jual.php';
+	var act = act;
+	
+	$.ajax({
+		type: 'POST',
+		url: URL,
+		data: {
+				 'transaksi_id'		: transaksi_id,
+				 'grid_table_list'	: 1
+		},
+		dataType: 'json',
+		cache: false,
+		success: function(data) 
+		{
+			/*var bnyk_data = data.product.lenght;
+			if(parseInt(data.product.lenght)>0)
+			{*/
+				$("#trx_detail").css('display', 'block');
+				$(".bodyadd").append(data.form);
+				App.initHelpers(['datepicker','select2']);
+			//}
+		}
+	});
+	
 }
 
 function action_list(act)
@@ -257,33 +286,36 @@ function action_list(act)
 		type: 'POST',
 		url: URL,
 		data: {
-			 'product[]'		: products,
-			 'supplier[]'		: suppliers,
-			 'hrg_supplier[]'	: hrg_suppliers,
-			 'hrg_jual[]'		: hrg_juals,
-			 'qty[]'			: qtys,
-			 'refund[]'			: refunds,
-			 'status_list'		: 'add_list',
-			 'simpan_list'		: 1
+				 'product[]'		: products,
+				 'supplier[]'		: suppliers,
+				 'hrg_supplier[]'	: hrg_suppliers,
+				 'hrg_jual[]'		: hrg_juals,
+				 'qty[]'			: qtys,
+				 'refund[]'			: refunds,
+				 'transaksi_id'		: $("#transaksi_id").val(),
+				 'status_list'		: 'add_list',
+				 'simpan_list'		: 1
 		},
 		dataType: 'json',
 		cache: false,
-		success: function(result) {
-			
-			for(var a = 0; a< result['product'].length; a++)
+		success: function(data) 
+		{
+			if(data.error)
 			{
-				alert(result['product'][a]);
-				//$('#content1').html(result[0]);
+				alertMSG('danger',data.message);
+			}else{
+				alertMSG('success',data.message);
 			}
-		},
+		}
 	});
 }
 
 
-$(function() {
+$(function() 
+{
 	
-	$('#table_toko').bootstrapTable({
-		url				: 'admin_toko/model/mod_toko.php',
+	$('#table_transaksi').bootstrapTable({
+		url				: 'transaksi/model/mod_transaksi_jual.php',
 		method			: 'get',
 		dataType		: 'json',
 		queryParams		: {
@@ -293,9 +325,11 @@ $(function() {
 		striped 		: true,
 		columns:[[
 				{field:'no',title:'#', width:'5%'},
-				{field:'toko_id',title:'Kode Toko'},
-				{field:'nama_toko',title:'Nama Toko'},
-				{field:'isactive',title:'Status'},
+				{field:'tgl_trx',title:'Tanggal Trx'},
+				{field:'inv_trx',title:'Inv Tokopedia'},
+				{field:'nama',title:'Nama'},
+				{field:'no_hp',title:'No Hp'},
+				{field:'no_resi',title:'No Resi'},
 				{field:'action',title:'Action', width:'15%'}
 			]],
 		pageNumber	  : 1,
@@ -304,7 +338,7 @@ $(function() {
 		pageList      : [5, 10, 25, 50, 100],
 		search        : true,
 		classes       : 'table table-hover table-bordered table-header-bg',
-		sortName      : 'toko_id',
+		sortName      : 'tgl_trx',
 		smartDisplay  : true
 	});		
 
@@ -320,6 +354,7 @@ function clearAll()
 	$("#no_hp").val();
 	$("#no_resi").val();
 	$("#status").val();
+	$('.list').remove();
 }
 
 function action(act,tab,id)
@@ -341,13 +376,19 @@ function action(act,tab,id)
 			dataType: 'json',
 			data:{
 				"edit"		: 1,
-				"table_transaksi"	: id	
+				"transaksi_id"	: id	
 			},
 			success:function(data){				
 				nextTabs();
-				$("#nama_toko").val(data.nama_toko);
-				$("#toko_id").val(data.toko_id);
-				$("#isactive").val(data.isactive);
+				list_data_detail(data.transaksi_id);
+				$("#transaksi_id").val(data.transaksi_id);
+				//$("#toko_id").val(data.toko_id);
+				$("#tgl_trx").val(data.tgl_trx);
+				$("#inv_trx").val(data.inv_trx);
+				$("#nama").val(data.inv_trx);
+				$("#alamat").val(data.alamat);
+				$("#no_hp").val(data.no_hp);
+				$("#no_resi").val(data.no_resi);
 				$("#status").val(act);
 				$("#add_div").css('display', 'none');
 				$("#edit_div").css('display', 'block');
@@ -361,15 +402,16 @@ function action(act,tab,id)
 			type: 'get',
 			dataType: 'json',
 			data:{
-				'simpan'	: 1,
-				'toko_id'	: $("#toko_id").val(),
-				'tgl_trx'	: $("#tgl_trx").val(),
-				'inv_trx'	: $("#inv_trx").val(),
-				'nama'		: $("#nama").val(),
-				'alamat'	: $("#alamat").val(),
-				'no_hp'		: $("#no_hp").val(),
-				'no_resi'	: $("#no_resi").val(),
-				'status'	: $("#status").val()
+				'simpan'		: 1,
+				'transaksi_id'	: $("#transaksi_id").val(),
+				'toko_id'		: $("#toko_id").val(),
+				'tgl_trx'		: $("#tgl_trx").val(),
+				'inv_trx'		: $("#inv_trx").val(),
+				'nama'			: $("#nama").val(),
+				'alamat'		: $("#alamat").val(),
+				'no_hp'			: $("#no_hp").val(),
+				'no_resi'		: $("#no_resi").val(),
+				'status'		: $("#status").val()
 			},
 			success:function(data){				
 				//alert(data.message);
