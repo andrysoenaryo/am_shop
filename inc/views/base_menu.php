@@ -9,7 +9,7 @@
 	
 	if(isset($_SESSION['system']['id_role']))
 	{
-		if($_SESSION['system']['id_role']!=1)
+		if(!in_array($_SESSION['system']['id_role'],array(1,2)))
 		{
 			$filter .= " and b.id_role = '".$_SESSION['system']['id_role']."'";
 			$join .= " Inner join menu_role b on a.id = b.id_menu";
@@ -37,7 +37,7 @@
 			
 			if(isset($_SESSION['system']['id_role']))
 			{			
-				if($_SESSION['system']['id_role']!=1)
+				if(!in_array($_SESSION['system']['id_role'],array(1,2)))
 				{
 					$value['ubah'] ? $data[$key]['ubah'] = $value['ubah'] : $data[$key]['ubah'] = "";
 					$value['hapus'] ? $data[$key]['hapus'] = $value['hapus'] : $data[$key]['hapus'] = "";
@@ -84,7 +84,7 @@
 			
 			if(isset($_SESSION['system']['id_role']))
 			{
-				if($_SESSION['system']['id_role']!=1)
+				if(!in_array($_SESSION['system']['id_role'],array(1,2)))
 				{
 					$value_sub['ubah'] ? $sub_menu[$key_sub]['ubah'] = $value_sub['ubah'] : $sub_menu[$key_sub]['ubah'] = "";
 					$value_sub['hapus'] ? $sub_menu[$key_sub]['hapus'] = $value_sub['hapus'] : $sub_menu[$key_sub]['hapus'] = "";

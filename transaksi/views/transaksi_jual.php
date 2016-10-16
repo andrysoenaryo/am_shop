@@ -80,10 +80,21 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-sm-10">
+                    <div class="col-sm-6">
                         <div class="form-material form-material-info ">
                             <input type="text" class="form-control input-sm" id="no_resi" name="no_resi" >
                             <label for="no_resi">No Resi</label>
+                        </div>
+                    </div>
+                    <div required class="col-sm-4">
+                        <div class="form-material form-material-info ">
+                            <select required class="js-select2 form-control input-sm" id="status_trx" name="status_trx" style="width: 100%;">
+                                <option value="process">On Process</option>
+                                <option value="success">Success</option>
+                                <option value="cancel">Cancel</option>
+                                <option value="refund">Refund</option>
+                            </select>
+                            <label for="status_trx">Status Transaksi</label>
                         </div>
                     </div>
                 </div>
@@ -117,7 +128,6 @@
                                 <th class="text-center" style="width: 100px;">Harga Jual</th>
                                 <th class="text-center" style="width: 100px;">Qty</th>
                                 <th class="hidden-xs" style="width: 100px;">Nominal Refund</th>
-                                <th class="hidden-xs" style="width: 70px;">Status</th>
                                 <th class="hidden-xs" style="width: 70px;">Actions</th>
                             </tr>
                         </thead>
@@ -170,7 +180,7 @@
 
 function addRow()
 {
-	var count_length = count_list();
+	var count_length = count_list()+1;
 	var rownum = count_list()-1;
 	if(count_length > 1){
 		$('.removeRow').show();
@@ -185,18 +195,8 @@ function addRow()
 		<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="qty['+rownum+']" name="qty[]" ></div></td>\
 		<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="refund['+rownum+']" name="refund[]" ></div></td>\
 		<td class="hidden-xs">\
-			<div class="form-material form-material-info ">\
-					<select required class="js-select2 form-control input-sm" id="status['+rownum+']" name="status['+rownum+']" style="width: 100%;">\
-						<option value=""></option>\
-						<option value="success">Success</option>\
-						<option value="cancel">Cancel</option>\
-						<option value="refund">Refund</option>\
-					</select>\
-			</div>\
-		</td>\
-		<td class="hidden-xs">\
-			<div class="btn-group">\
-				<button class="btn btn-xs btn-default" type="button" data-toggle="tooltip" title="Remove Client" ><i class="fa fa-times"></i></button>\
+			<div class="btn-group" align="center">\
+				<button class="btn btn-sm btn-danger" type="button" data-toggle="tooltip" title="Remove Client" ><i class="fa fa-trash-o"></i></button>\
 			</div>\
 		</td>\
 	</tr>';
@@ -217,7 +217,8 @@ function removeRow()
 
 function count_list()
 {
-	var length_list = $('.list').length;
+	
+	if($('.list_exist').length>0) { var length_list = $('.list_exist').length;}else{ var length_list = $('.list').length;}
 	if( length_list == 1 ){ 
 		$('.removeRow').hide();	
 	}
@@ -252,62 +253,101 @@ function list_data_detail(transaksi_id)
 	
 }
 
-function action_list(act)
+function action_list(act,tab,id)
 {
-	
-	var products = $('input[name="product[]"]').map(function(){ 
-						return this.value; 
-					}).get();
-	
-	var suppliers = $('input[name="supplier[]"]').map(function(){ 
-						return this.value; 
-					}).get();
-					
-	var hrg_suppliers = $('input[name="hrg_supplier[]"]').map(function(){ 
-						return this.value; 
-					}).get();
-					
-	var hrg_juals = $('input[name="hrg_jual[]"]').map(function(){ 
-						return this.value; 
-					}).get();
-					
-	var qtys = $('input[name="qty[]"]').map(function(){ 
-						return this.value; 
-					}).get();
-					
-	var refunds = $('input[name="refund[]"]').map(function(){ 
-						return this.value; 
-					}).get();
-					
 	var URL = 'transaksi/model/mod_transaksi_jual.php';
 	var act = act;
+	if(act=='simpan')
+	{
 	
-	$.ajax({
-		type: 'POST',
-		url: URL,
-		data: {
-				 'product[]'		: products,
-				 'supplier[]'		: suppliers,
-				 'hrg_supplier[]'	: hrg_suppliers,
-				 'hrg_jual[]'		: hrg_juals,
-				 'qty[]'			: qtys,
-				 'refund[]'			: refunds,
-				 'transaksi_id'		: $("#transaksi_id").val(),
-				 'status_list'		: 'add_list',
-				 'simpan_list'		: 1
-		},
-		dataType: 'json',
-		cache: false,
-		success: function(data) 
-		{
-			if(data.error)
+		var products = $('input[name="product[]"]').map(function(){ 
+							return this.value; 
+						}).get();
+		
+		var suppliers = $('input[name="supplier[]"]').map(function(){ 
+							return this.value; 
+						}).get();
+						
+		var hrg_suppliers = $('input[name="hrg_supplier[]"]').map(function(){ 
+							return this.value; 
+						}).get();
+						
+		var hrg_juals = $('input[name="hrg_jual[]"]').map(function(){ 
+							return this.value; 
+						}).get();
+						
+		var qtys = $('input[name="qty[]"]').map(function(){ 
+							return this.value; 
+						}).get();
+						
+		var refunds = $('input[name="refund[]"]').map(function(){ 
+							return this.value; 
+						}).get();
+		
+		var transaksi_detail_id = $('input[name="transaksi_detail_id[]"]').map(function(){ 
+							return this.value; 
+						}).get();
+						
+		var URL = 'transaksi/model/mod_transaksi_jual.php';
+		var act = act;
+		
+		$.ajax({
+			type: 'POST',
+			url: URL,
+			data: {
+					 'product[]'				: products,
+					 'supplier[]'				: suppliers,
+					 'hrg_supplier[]'			: hrg_suppliers,
+					 'hrg_jual[]'				: hrg_juals,
+					 'qty[]'					: qtys,
+					 'refund[]'					: refunds,
+					 'transaksi_detail_id[]'	: transaksi_detail_id,
+					 'transaksi_id'				: $("#transaksi_id").val(),
+					 'status_list'				: 'simpan',
+					 'simpan_list'				: 1
+			},
+			dataType: 'json',
+			cache: false,
+			success: function(data) 
 			{
-				alertMSG('danger',data.message);
-			}else{
-				alertMSG('success',data.message);
+				if(data.error)
+				{
+					alertMSG('danger',data.message);
+				}else{
+					alertMSG('success',data.message);
+				}
+				
+				$('.list_exist').remove();
+				$('.list').remove();
+				list_data_detail($("#transaksi_id").val());
 			}
-		}
-	});
+		});
+	}
+	else if(act=='delete')
+	{
+		$.ajax({
+			url:URL,
+			type: 'POST',
+			dataType: 'json',
+			data:{
+				'status_list'			: 'delete',
+				'simpan_list'			: 1,
+				'transaksi_detail_id'	: id
+			},
+			success:function(data){				
+				if(data.error)
+				{
+					alertMSG('danger',data.message);
+				}else{
+					alertMSG('success',data.message);
+				}
+				$('.list_exist').remove();
+				$('.list').remove();
+				list_data_detail($("#transaksi_id").val());
+			}
+		});	
+		
+	}
 }
 
 
@@ -330,6 +370,7 @@ $(function()
 				{field:'nama',title:'Nama'},
 				{field:'no_hp',title:'No Hp'},
 				{field:'no_resi',title:'No Resi'},
+				{field:'status_trx',title:'Status'},
 				{field:'action',title:'Action', width:'15%'}
 			]],
 		pageNumber	  : 1,
@@ -355,6 +396,7 @@ function clearAll()
 	$("#no_resi").val();
 	$("#status").val();
 	$('.list').remove();
+	$('.list_exist').remove();
 }
 
 function action(act,tab,id)
@@ -389,6 +431,7 @@ function action(act,tab,id)
 				$("#alamat").val(data.alamat);
 				$("#no_hp").val(data.no_hp);
 				$("#no_resi").val(data.no_resi);
+				$("#status_trx").val(data.status_trx);
 				$("#status").val(act);
 				$("#add_div").css('display', 'none');
 				$("#edit_div").css('display', 'block');
@@ -411,6 +454,7 @@ function action(act,tab,id)
 				'alamat'		: $("#alamat").val(),
 				'no_hp'			: $("#no_hp").val(),
 				'no_resi'		: $("#no_resi").val(),
+				'status_trx'	: $("#status_trx").val(),
 				'status'		: $("#status").val()
 			},
 			success:function(data){				

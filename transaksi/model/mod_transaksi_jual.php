@@ -12,16 +12,18 @@
 	if(isset($_GET['grid_table']))
 	{
 
-		$sql = "select * from transaksi 
-				where username = '".$_SESSION['system']['username']."' or 'superuser' = '".$_SESSION['system']['username']."'";
+		$sql = "select a.* , b.nama_toko
+				from transaksi a
+				left join toko b on a.toko_id = b.toko_id
+				where a.username = '".$_SESSION['system']['username']."' or 'superuser' = '".$_SESSION['system']['username']."'";
 		$conn->query($sql);
 		$row = $conn->resultset();
 		//$conn->debugDumpParams();
 		foreach($row as $key => $value)
 		{
 			
-			if($_SESSION['menu'][$_GET['id_menu']]['ubah']=='Y'){ $disable_ubah = '';}else{ $disable_ubah = 'disabled';}
-			if($_SESSION['menu'][$_GET['id_menu']]['hapus']=='Y'){ $disable_hapus = '';}else{ $disable_hapus = 'disabled';}
+			if($_SESSION['menu'][$_GET['id_menu']]['ubah']=='Y' && in_array($value['status_trx'],array('process'))){ $disable_ubah = '';}else{ $disable_ubah = 'disabled';}
+			if($_SESSION['menu'][$_GET['id_menu']]['hapus']=='Y' && in_array($value['status_trx'],array('process'))){ $disable_hapus = '';}else{ $disable_hapus = 'disabled';}
  	
 			
 			$data[$key]['no'] 			= $key+1;
@@ -32,7 +34,10 @@
 			$data[$key]['alamat'] 		= $value['alamat'];
 			$data[$key]['no_hp'] 		= $value['no_hp'];
 			$data[$key]['no_resi'] 		= $value['no_resi'];
-			//$data[$key]['isactive'] 	= $value['isactive']=='Y' ? "<span class=\"label label-success\">Active</span>" : "<span class=\"label label-danger\">Not Active</span>";
+			$data[$key]['status_trx'] 	= ($value['status_trx']=='success' ? "<span class=\"label label-success\">Success</span>":
+										  ($value['status_trx']=='refund' ? "<span class=\"label label-warning\">Refund</span>":
+										  ($value['status_trx']=='cancel' ? "<span class=\"label label-danger\">Cancel</span>":
+										  "<span class=\"label label-info\">On Process</span>")));
 			$data[$key]['action'] 		= "<button ".$disable_ubah." class = \"btn btn-sm btn-success\" onClick=\"action('edit','btn-edit','".$value['transaksi_id']."');\"> Edit </button> 
 										   <button ".$disable_hapus." class = \"btn btn-sm btn-danger\" onClick=\"action('delete','delete','".$value['transaksi_id']."');\"> Delete </button>
 										   ";
@@ -81,7 +86,8 @@
 										nama = '".$_GET['nama']."', 
 										alamat = '".$_GET['alamat']."', 
 										no_hp = '".$_GET['no_hp']."', 
-										no_resi  = '".$_GET['no_resi']."'
+										no_resi  = '".$_GET['no_resi']."', 
+										status_trx  = '".$_GET['status_trx']."'
 						WHERE transaksi_id = '".$_GET['transaksi_id']."'";
 			$conn->query($update);
 			$exe = $conn->execute();
@@ -112,7 +118,7 @@
 			}
 			
 			
-			$insert = "INSERT INTO transaksi ( transaksi_id, tgl_trx, toko_id, inv_trx, nama, alamat, no_hp, no_resi ,username) VALUES ( '".$transaksi_id."', '".$_GET['tgl_trx']."', '".$_GET['toko_id']."', '".$_GET['inv_trx']."', '".$_GET['nama']."', '".$_GET['alamat']."', '".$_GET['no_hp']."', '".$_GET['no_resi']."', '".$_SESSION['system']['username']."' )";
+			$insert = "INSERT INTO transaksi ( transaksi_id, tgl_trx, toko_id, inv_trx, nama, alamat, no_hp, no_resi, status_trx ,username) VALUES ( '".$transaksi_id."', '".$_GET['tgl_trx']."', '".$_GET['toko_id']."', '".$_GET['inv_trx']."', '".$_GET['nama']."', '".$_GET['alamat']."', '".$_GET['no_hp']."', '".$_GET['no_resi']."', '".$_GET['status_trx']."', '".$_SESSION['system']['username']."' )";
 			$conn->query($insert);
 			$exe = $conn->execute();
 			if($exe)
@@ -134,30 +140,55 @@
 	}
 	else if(isset($_POST['simpan_list']))
  	{
-	 	if($_POST['status_list']=='edit')
+		if($_POST['status_list']=='delete')
 		{
+			$delete = "delete from transaksi_detail where transaksi_detail_id = '".$_POST['transaksi_detail_id']."'";
+			$conn->query($delete);
+			$exe = $conn->execute();
+			if($exe)
+			{
+				$message = "Sucess Delete Transaksi Detail";
+				$error = false;				
+			}
+			else
+			{
+				$message = "Gagal Delete Transaksi Detail";
+				$error = true;
+				
+			}
 			
 		}
 		else
 		{
-			for($i=0;$i<count($_POST['product']);$i++)
+			$delete = "delete from transaksi_detail where transaksi_id = '".$_POST['transaksi_id']."'";
+			$conn->query($delete);
+			$exe_delete = $conn->execute();
+			if($exe_delete )
 			{
+				for($i=0;$i<count($_POST['product']);$i++)
+				{
 				
-				$insert = "INSERT INTO transaksi_detail ( transaksi_id, product, supplier, harga_supplier, harga_jual, qty, harga_refund) VALUES 
-														( '".$_POST['transaksi_id']."', '".$_POST['product'][$i]."', '".$_POST['supplier'][$i]."', '".$_POST['hrg_supplier'][$i]."', '".$_POST['hrg_jual'][$i]."', '".$_POST['qty'][$i]."', '".$_POST['refund'][$i]."' )";
-				$conn->query($insert);
-				$exe = $conn->execute();
-				if($exe)
-				{
-					$message = "Sucess Insert Transaksi Detail";
-					$error = false;				
+					$insert = "INSERT INTO transaksi_detail ( transaksi_id, product, supplier, harga_supplier, harga_jual, qty, harga_refund) VALUES 
+															( '".$_POST['transaksi_id']."', '".$_POST['product'][$i]."', '".$_POST['supplier'][$i]."', '".$_POST['hrg_supplier'][$i]."', '".$_POST['hrg_jual'][$i]."', '".$_POST['qty'][$i]."', '".$_POST['refund'][$i]."' )";
+					$conn->query($insert);
+					$exe = $conn->execute();
+					if($exe)
+					{
+						$message = "Sucess Insert / Edit Transaksi Detail";
+						$error = false;				
+					}
+					else
+					{
+						$message = "Gagal Insert / Edit Transaksi Detail";
+						$error = true;
+						
+					}
 				}
-				else
-				{
-					$message = "Gagal Insert Transaksi Detail";
-					$error = true;
-					
-				}
+			}
+			else
+			{
+				$message = "Gagal Insert / Edit Transaksi Detail";
+				$error = true;
 			}
 		}
 		
@@ -176,6 +207,7 @@
 		foreach($row as $key => $value)
 		{
 			$no++;
+			$transaksi_detail_id				= $value['transaksi_detail_id'];
 			$data['transaksi_detail_id'][$key] 	= $value['transaksi_detail_id'];
 			$data['product'][$key] 				= $value['product'];
 			$data['supplier'][$key] 			= $value['supplier'];
@@ -184,7 +216,7 @@
 			$data['qty'][$key] 					= $value['qty'];
 			$data['harga_refund'][$key] 		= $value['harga_refund'];
 			
-			$data['form'][$key] = '<tr class="list">
+			$data['form'][$key] = '<tr class="list_exist">
 								<td class="text-center">'.$no.'</td>
 								<td class="text-left"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="product['.($no-1).']" name="product[]" value="'.$value['product'].'" ></div></td>
 								<td class="text-left"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="supplier['.($no-1).']" name="supplier[]" value="'.$value['supplier'].'" ></div></td>
@@ -193,18 +225,8 @@
 								<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="qty['.($no-1).']" name="qty[]" value="'.$value['qty'].'" ></div></td>
 								<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="refund['.($no-1).']" name="refund[]" value="'.$value['harga_refund'].'" ></div></td>
 								<td class="hidden-xs">
-									<div class="form-material form-material-info ">
-											<select required class="js-select2 form-control input-sm" id="status['.($no-1).']" name="status[]" style="width: 100%;">
-												<option value=""></option>
-												<option value="success">Success</option>
-												<option value="cancel">Cancel</option>
-												<option value="refund">Refund</option>
-											</select>
-									</div>
-								</td>
-								<td class="hidden-xs">
-									<div class="btn-group">
-										<button class="btn btn-xs btn-default" type="button" data-toggle="tooltip" title="Remove Client" ><i class="fa fa-times"></i></button>
+									<div class="btn-group" align="center">
+										<button class="btn btn-sm btn-danger" type="button" data-toggle="tooltip" title="Remove Client" onClick="action_list(\'delete\',\'delete\','.$transaksi_detail_id.');"><i class="fa fa-trash-o"></i></button>
 									</div>
 								</td>
 							</tr>';

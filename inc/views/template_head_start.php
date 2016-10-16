@@ -46,6 +46,7 @@
         <!-- Web fonts -->
         <link rel="stylesheet" href="<?php echo $one->assets_folder; ?>/css/font.css">
         <!-- Plugin -->
+        <link rel="stylesheet" href="<?php echo $one->assets_folder; ?>/font-awesome-4.6.3/css/font-awesome.min.css">
         <link rel="stylesheet" href="<?php echo $one->assets_folder; ?>/js/plugins/bootstrap-datepicker/bootstrap-datepicker3.min.css">
         <link rel="stylesheet" href="<?php echo $one->assets_folder; ?>/js/plugins/select2/select2.min.css">
 		<link rel="stylesheet" href="<?php echo $one->assets_folder; ?>/js/plugins/select2/select2-bootstrap.css">

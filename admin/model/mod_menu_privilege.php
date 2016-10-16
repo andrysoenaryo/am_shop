@@ -117,7 +117,7 @@
 	else if($_GET['select']=='role')
 	{
 
-		$sql = "select * from role";
+		$sql = "select * from role where id_role <> 1";
 		$conn->query($sql);
 		$row = $conn->resultset();
 		//$conn->debugDumpParams();
