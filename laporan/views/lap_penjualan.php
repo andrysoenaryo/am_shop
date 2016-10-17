@@ -45,11 +45,11 @@
                     	<div id='add_div'>
                     	<?php if($_SESSION['menu'][$_GET['id_menu']]['tambah']=='Y'){ $disable_tambah = '';}else{ $disable_tambah = 'disabled';}?>
                         	<button <?php echo $disable_tambah;?> class="btn btn-sm btn-primary" onClick="action('load');"> View </button>
-                            <button class="btn btn-sm btn-danger" onClick="action('back');"> Batal </button>
+                            <button class="btn btn-sm btn-danger" onClick="clearAll();"> Batal </button>
                         </div>
                         <div id='edit_div' style="display:none;">
-                        	<button class="btn btn-sm btn-primary" onClick="action('simpan');"> Edit </button>
-                            <button class="btn btn-sm btn-danger" onClick="action('back');"> Batal </button>
+                        	<button class="btn btn-sm btn-primary" onClick="action('load');"> Edit </button>
+                            <button class="btn btn-sm btn-danger" onClick="clearAll();"> Batal </button>
                         </div>
                     </div>
                 </div>
@@ -97,20 +97,21 @@ function loadReport()
 {
 	$(function() 
 	{
-		var tgl_from = $("#tanggal_from").val();
-		var tgl_to = $("#tanggal_to").val();
-		var status_trx = $("#status_trx").val();
+		if($("#tanggal_from").val()!=''){ var tgl_from = $("#tanggal_from").val();}else{ var tgl_from = 'xxx';}
+		if($("#tanggal_to").val()!=''){ var tgl_to = $("#tanggal_to").val();}else{ var tgl_to = 'xxx';}
+		if($("#status_trx").val()!=''){ var status_trx = $("#status_trx").val();}else{ var status_trx = 'xxx';}
+		
 		
 		$('#table_lap_penjualan').bootstrapTable({
 			url				: 'laporan/model/mod_lap_penjualan.php',
-			method			: 'get',
+			method			: 'GET',
 			dataType		: 'json',
 			queryParams		: {
 								grid_table	: 1,
 								id_menu		: <?php echo $_GET['id_menu'];?>,
 								tgl_from	: tgl_from,
-								tgl_to	: tgl_to,
-								status_trx	: status_trx,
+								tgl_to		: tgl_to,
+								status_trx	: status_trx
 							  },
 			striped 		: true,
 			columns:[[
@@ -119,10 +120,19 @@ function loadReport()
 					{field:'inv_trx',title:'Inv Tokopedia'},
 					{field:'nama',title:'Nama'},
 					{field:'alamat',title:'Alamat'},
+					{field:'no_hp',title:'No HP'},
+					{field:'no_resi',title:'Resi'},
+					{field:'status_trx',title:'Status'},
 					{field:'product',title:'Product'},
+					{field:'supplier',title:'Supplier'},
+					{field:'harga_supplier',title:'Harga Supplier'},
+					{field:'harga_jual',title:'Harga Jual'},
+					{field:'qty',title:'Qty'},
+					{field:'harga_refund',title:'Refund'},
 					{field:'total_harga',title:'Total Harga', footerFormatter: sumFormatter}
 					
 				]],
+			
 			pageNumber	  : 1,
 			pagination	  : true,
 			pageSize      : 5,
@@ -152,7 +162,8 @@ function clearAll()
 	$("#tanggal_from").val();
 	$("#tanggal_to").val();
 	$("#status_trx").val();
-	$("#status").val();
+	$("#lap_detail").css('display', 'none');
+	$('#table_lap_penjualan').bootstrapTable('refresh');
 }
 
 function action(act)
@@ -160,6 +171,7 @@ function action(act)
 	$("#lap_detail").css('display', 'none');
 	$("#lap_detail").css('display', 'block');
 	loadReport();
+	$('#table_lap_penjualan').bootstrapTable('refresh');
 }
 </script>
 

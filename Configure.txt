@@ -1,0 +1,4 @@
+Database Name : am_shop
+user / pass Admistrator : administrator / admin2016
+user / pass Admin Toko : ademuhid / ademuhid
+Reset Password : pass2016

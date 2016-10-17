@@ -83,8 +83,8 @@ $('#table_account').bootstrapTable({
 			{field:'no',title:'#', width:'5%'},
 			{field:'username',title:'Username'},
 			{field:'nama_lengkap',title:'Nama Lengkap'},
-			{field:'password',title:'Password'},
-			{field:'action',title:'Action', width:'15%'}
+			/*{field:'password',title:'Password'},*/
+			{field:'action',title:'Action', width:'30%'}
 		]],
 	pageNumber	  : 1,
 	pagination	  : true,
@@ -129,6 +129,7 @@ function action(act,tab,id)
 			success:function(data){				
 				nextTabs();
 				$("#username").val(data.username);
+				$("#username").prop('readonly', true);
 				$("#nm_lengkap").val(data.nama_lengkap);
 				$("#password").val(data.password);
 				$("#status").val(act);
@@ -171,6 +172,29 @@ function action(act,tab,id)
 			dataType: 'json',
 			data:{
 				'delete'	: 1,
+				'username'	: id
+			},
+			success:function(data){				
+				if(data.error)
+				{
+					alertMSG('danger',data.message);
+				}else{
+					alertMSG('success',data.message);
+				}
+				backTabs();
+				$('#table_account').bootstrapTable('refresh');
+				clearAll();
+			}
+		});	
+	}
+	else if(act=='reset')
+	{		
+		$.ajax({
+			url:URL,
+			type: 'get',
+			dataType: 'json',
+			data:{
+				'reset'	: 1,
 				'username'	: id
 			},
 			success:function(data){				

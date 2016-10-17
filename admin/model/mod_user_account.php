@@ -22,11 +22,37 @@
 			$data[$key]['nama_lengkap'] = $value['nama_lengkap'];
 			$data[$key]['password'] 	= $value['password'];
 			$data[$key]['action'] 		= "<button ".$disable_ubah." class = \"btn btn-sm btn-success\" onClick=\"action('edit','tab-form','".$value['username']."');\"> Edit </button> 
-										   <button ".$disable_hapus." class = \"btn btn-sm btn-danger\" onClick=\"action('delete','delete','".$value['username']."');\"> Delete </button>";
+										   <button ".$disable_hapus." class = \"btn btn-sm btn-danger\" onClick=\"action('delete','delete','".$value['username']."');\"> Delete </button>
+										   <button ".$disable_hapus." class = \"btn btn-sm btn-warning\" onClick=\"action('reset','reset','".$value['username']."');\"> Reset Password </button>";
 		}
 		
 		
 	
+	}
+	else if(isset($_GET['reset']))
+	{
+		
+		$resetPass = 'pass2016';
+		$update = "UPDATE user_account SET 
+					password = '".md5($resetPass)."' 
+				   WHERE username = '".$_GET['username']."'";
+		$conn->query($update);
+		$exe = $conn->execute();
+		if($exe)
+		{
+			$message = "Sucess Reset Password";
+			$error = false;				
+		}
+		else
+		{
+			$message = "Gagal Reset Password";
+			$error = true;
+			
+		}
+		
+		$data['message'] = $message;
+		$data['error'] = $error;
+
 	}
 	else if(isset($_GET['delete']))
 	{

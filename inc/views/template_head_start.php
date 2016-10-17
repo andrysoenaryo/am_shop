@@ -50,3 +50,4 @@
         <link rel="stylesheet" href="<?php echo $one->assets_folder; ?>/js/plugins/bootstrap-datepicker/bootstrap-datepicker3.min.css">
         <link rel="stylesheet" href="<?php echo $one->assets_folder; ?>/js/plugins/select2/select2.min.css">
 		<link rel="stylesheet" href="<?php echo $one->assets_folder; ?>/js/plugins/select2/select2-bootstrap.css">
+        <link rel="stylesheet" href="<?php echo $one->assets_folder; ?>/bootstrap-select/css/bootstrap-select.min.css" />

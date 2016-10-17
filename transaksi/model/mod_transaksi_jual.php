@@ -234,6 +234,24 @@
 		}
 		
 	}
+	else if(isset($_GET['toko']))
+	{
+		$sql = "select * from toko where isactive = 'Y' and (username = '".$_SESSION['system']['username']."' or 'superuser' = '".$_SESSION['system']['username']."')";
+		$conn->query($sql);
+		$row = $conn->resultset();
+		$count = $conn->rowCount();
+		
+		//$data['total_count'] = $count;
+		foreach($row as $key => $value)
+		{
+			/*$data['items']['id'] = $value['toko_id'];
+			$data['items']['name'] = $value['nama_toko'];
+			$data['items']['full_name'] = $value['nama_toko'];*/
+			$data[$key]['id'] = $value['toko_id'];
+			$data[$key]['name'] = $value['nama_toko'];/**/
+		}
+
+	}
 	
 echo json_encode($data);
 ?>

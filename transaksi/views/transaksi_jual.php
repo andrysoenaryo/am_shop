@@ -31,15 +31,7 @@
             	<div class="form-group">-->
                     <div class="col-sm-4">
                         <div class="form-material form-material-info ">
-                            <select required class="js-select2 form-control input-sm" id="toko_id" name="toko_id" style="width: 100%;" data-placeholder="Pilih Toko..">
-                                <option></option><!-- Required for data-placeholder attribute to work with Chosen plugin -->
-                                <option value="1">HTML</option>
-                                <option value="2">CSS</option>
-                                <option value="3">Javascript</option>
-                                <option value="4">PHP</option>
-                                <option value="5">MySQL</option>
-                                <option value="6">Ruby</option>
-                                <option value="7">AngularJS</option>
+                            <select required class="selectpicker form-control input-sm" id="toko_id" name="toko_id" style="width: 100%;" >
                             </select>
                             <label for="toko_id">Nama Toko</label>
                         </div>
@@ -88,7 +80,7 @@
                     </div>
                     <div required class="col-sm-4">
                         <div class="form-material form-material-info ">
-                            <select required class="js-select2 form-control input-sm" id="status_trx" name="status_trx" style="width: 100%;">
+                            <select required class="selectpicker form-control input-sm" id="status_trx" name="status_trx" style="width: 100%;">
                                 <option value="process">On Process</option>
                                 <option value="success">Success</option>
                                 <option value="cancel">Cancel</option>
@@ -161,6 +153,7 @@
 <script src="<?php echo $one->assets_folder; ?>/js/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
 <script src="<?php echo $one->assets_folder; ?>/js/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
 <script src="<?php echo $one->assets_folder; ?>/js/plugins/select2/select2.full.min.js"></script>
+<script src="<?php echo $one->assets_folder; ?>/bootstrap-select/js/bootstrap-select.min.js"></script>
 <!-- Page JS Code 
 <script src="<?php echo $one->assets_folder; ?>/js/pages/base_ui_activity.js"></script>-->
 <!--<script>
@@ -172,12 +165,13 @@
 <script>
     $(function(){
         // Init page helpers (BS Datepicker + BS Colorpicker + Select2 + Masked Input + Tags Inputs plugins)
-        App.initHelpers(['datepicker','select2']); /*, 'colorpicker', 'select2', 'masked-inputs', 'tags-inputs'*/
+        App.initHelpers(['datepicker']); /*, 'colorpicker', 'select2', 'masked-inputs', 'tags-inputs'*/
     });
 </script>
 
 <script>
 
+//selectLoad();
 function addRow()
 {
 	var count_length = count_list()+1;
@@ -246,7 +240,7 @@ function list_data_detail(transaksi_id)
 			{*/
 				$("#trx_detail").css('display', 'block');
 				$(".bodyadd").append(data.form);
-				App.initHelpers(['datepicker','select2']);
+				App.initHelpers(['datepicker']);
 			//}
 		}
 	});
@@ -351,6 +345,7 @@ function action_list(act,tab,id)
 }
 
 
+
 $(function() 
 {
 	
@@ -381,8 +376,29 @@ $(function()
 		classes       : 'table table-hover table-bordered table-header-bg',
 		sortName      : 'tgl_trx',
 		smartDisplay  : true
-	});		
+	});	
 
+});
+
+
+$("#status_trx").select2();
+$("#toko_id").select2();
+
+$(document).ready(function () {
+    
+	$.ajax({
+			type: "GET",
+			dataType: "json",
+			url: 'transaksi/model/mod_transaksi_jual.php?toko=1'
+		}).done(function( data, responce ) {
+				var component = "";
+				$.each(data, function(key,val){
+					component += '<option value="'+val.id+'">' + val.name + '</option>';	
+				});
+				$("#toko_id").append(component);
+		}).fail(function(error) {
+			console.log(error);
+		});
 });
 
 function clearAll()
@@ -424,7 +440,7 @@ function action(act,tab,id)
 				nextTabs();
 				list_data_detail(data.transaksi_id);
 				$("#transaksi_id").val(data.transaksi_id);
-				//$("#toko_id").val(data.toko_id);
+				$("#toko_id").select2("val", data.toko_id);
 				$("#tgl_trx").val(data.tgl_trx);
 				$("#inv_trx").val(data.inv_trx);
 				$("#nama").val(data.inv_trx);
@@ -506,10 +522,6 @@ function action(act,tab,id)
 		});	
 	}
 }
-
-
-
-
 
 
 </script>
