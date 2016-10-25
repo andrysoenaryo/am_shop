@@ -13,7 +13,7 @@
 	{
 
 		$sql = "select a.* , b.nama_toko
-				from transaksi a
+				from transaksi_2 a
 				left join toko b on a.toko_id = b.toko_id
 				where a.username = '".$_SESSION['system']['username']."' or 'superuser' = '".$_SESSION['system']['username']."'";
 		$conn->query($sql);
@@ -47,7 +47,7 @@
 	else if(isset($_GET['delete']))
 	{
 		
-		$delete = "delete from transaksi where transaksi_id = '".$_GET['transaksi_id']."'";
+		$delete = "delete from transaksi_2 where transaksi_id = '".$_GET['transaksi_id']."'";
 		$conn->query($delete);
 		$exe = $conn->execute();
 		if($exe)
@@ -69,7 +69,7 @@
 	else if(isset($_GET['edit']))
 	{
 		
-		$sql = "select * from transaksi where transaksi_id = '".$_GET['transaksi_id']."'";
+		$sql = "select * from transaksi_2 where transaksi_id = '".$_GET['transaksi_id']."'";
 		$conn->query($sql);
 		$data = $conn->resultone();
 		
@@ -79,7 +79,7 @@
 		
 		if($_GET['status']=='edit')
 		{
-			$update = "UPDATE transaksi SET 
+			$update = "UPDATE transaksi_2 SET 
 										tgl_trx = '".$_GET['tgl_trx']."', 
 										toko_id = '".$_GET['toko_id']."', 
 										inv_trx = '".$_GET['inv_trx']."', 
@@ -87,7 +87,13 @@
 										alamat = '".$_GET['alamat']."', 
 										no_hp = '".$_GET['no_hp']."', 
 										no_resi  = '".$_GET['no_resi']."', 
-										status_trx  = '".$_GET['status_trx']."'
+										status_trx  = '".$_GET['status_trx']."', 
+										product  = '".$_GET['product']."', 
+										supplier  = '".$_GET['supplier']."', 
+										harga_supplier  = '".$_GET['harga_supplier']."', 
+										harga_jual  = '".$_GET['harga_jual']."', 
+										qty  = '".$_GET['qty']."', 
+										harga_refund  = '".$_GET['harga_refund']."'
 						WHERE transaksi_id = '".$_GET['transaksi_id']."'";
 			$conn->query($update);
 			$exe = $conn->execute();
@@ -107,7 +113,7 @@
 		{
 			
 			$prefix = 'TRX'; 
-			$sql = "select max(transaksi_id) as maxno from transaksi where transaksi_id like '".$prefix."%'";
+			$sql = "select max(transaksi_id) as maxno from transaksi_2 where transaksi_id like '".$prefix."%'";
 			$conn->query($sql);
 			$getmax = $conn->resultone();			
 			
@@ -118,7 +124,8 @@
 			}
 			
 			
-			$insert = "INSERT INTO transaksi ( transaksi_id, tgl_trx, toko_id, inv_trx, nama, alamat, no_hp, no_resi, status_trx ,username) VALUES ( '".$transaksi_id."', '".$_GET['tgl_trx']."', '".$_GET['toko_id']."', '".$_GET['inv_trx']."', '".$_GET['nama']."', '".$_GET['alamat']."', '".$_GET['no_hp']."', '".$_GET['no_resi']."', '".$_GET['status_trx']."', '".$_SESSION['system']['username']."' )";
+			$insert = "INSERT INTO transaksi_2 ( transaksi_id, tgl_trx, toko_id, inv_trx, nama, alamat, no_hp, no_resi, status_trx ,username, product, supplier, harga_supplier, harga_jual, qty, harga_refund)"; 
+			$insert .= "VALUES ( '".$transaksi_id."', '".$_GET['tgl_trx']."', '".$_GET['toko_id']."', '".$_GET['inv_trx']."', '".$_GET['nama']."', '".$_GET['alamat']."', '".$_GET['no_hp']."', '".$_GET['no_resi']."', '".$_GET['status_trx']."', '".$_SESSION['system']['username']."', '".$_GET['product']."', '".$_GET['supplier']."', '".$_GET['harga_supplier']."', '".$_GET['harga_jual']."', '".$_GET['qty']."', '".$_GET['harga_refund']."' )";
 			$conn->query($insert);
 			$exe = $conn->execute();
 			if($exe)
@@ -136,103 +143,6 @@
 		
 		$data['message'] = $message;
 		$data['error'] = $error;
-		$data['transaksi_id'] = $transaksi_id;
-	}
-	else if(isset($_POST['simpan_list']))
- 	{
-		if($_POST['status_list']=='delete')
-		{
-			$delete = "delete from transaksi_detail where transaksi_detail_id = '".$_POST['transaksi_detail_id']."'";
-			$conn->query($delete);
-			$exe = $conn->execute();
-			if($exe)
-			{
-				$message = "Sucess Delete Transaksi Detail";
-				$error = false;				
-			}
-			else
-			{
-				$message = "Gagal Delete Transaksi Detail";
-				$error = true;
-				
-			}
-			
-		}
-		else
-		{
-			$delete = "delete from transaksi_detail where transaksi_id = '".$_POST['transaksi_id']."'";
-			$conn->query($delete);
-			$exe_delete = $conn->execute();
-			if($exe_delete )
-			{
-				for($i=0;$i<count($_POST['product']);$i++)
-				{
-				
-					$insert = "INSERT INTO transaksi_detail ( transaksi_id, product, supplier, harga_supplier, harga_jual, qty, harga_refund) VALUES 
-															( '".$_POST['transaksi_id']."', '".$_POST['product'][$i]."', '".$_POST['supplier'][$i]."', '".$_POST['hrg_supplier'][$i]."', '".$_POST['hrg_jual'][$i]."', '".$_POST['qty'][$i]."', '".$_POST['refund'][$i]."' )";
-					$conn->query($insert);
-					$exe = $conn->execute();
-					if($exe)
-					{
-						$message = "Sucess Insert / Edit Transaksi Detail";
-						$error = false;				
-					}
-					else
-					{
-						$message = "Gagal Insert / Edit Transaksi Detail";
-						$error = true;
-						
-					}
-				}
-			}
-			else
-			{
-				$message = "Gagal Insert / Edit Transaksi Detail";
-				$error = true;
-			}
-		}
-		
-		$data['message'] = $message;
-		$data['error'] = $error;
-	 
- 	}
-	else if(isset($_POST['grid_table_list']))
-	{
-		
-		$sql = "SELECT * FROM TRANSAKSI_DETAIL WHERE TRANSAKSI_ID = '".$_POST['transaksi_id']."'";
-		$conn->query($sql);
-		$row = $conn->resultset();
-		//$conn->debugDumpParams();
-		$no = 0;
-		foreach($row as $key => $value)
-		{
-			$no++;
-			$transaksi_detail_id				= $value['transaksi_detail_id'];
-			$data['transaksi_detail_id'][$key] 	= $value['transaksi_detail_id'];
-			$data['product'][$key] 				= $value['product'];
-			$data['supplier'][$key] 			= $value['supplier'];
-			$data['harga_supplier'][$key] 		= $value['harga_supplier'];
-			$data['harga_jual'][$key] 			= $value['harga_jual'];
-			$data['qty'][$key] 					= $value['qty'];
-			$data['harga_refund'][$key] 		= $value['harga_refund'];
-			
-			$data['form'][$key] = '<tr class="list_exist">
-								<td class="text-center">'.$no.'</td>
-								<td class="text-left"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="product['.($no-1).']" name="product[]" value="'.$value['product'].'" ></div></td>
-								<td class="text-left"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="supplier['.($no-1).']" name="supplier[]" value="'.$value['supplier'].'" ></div></td>
-								<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="hrg_supplier['.($no-1).']" name="hrg_supplier[]" value="'.$value['harga_supplier'].'" ></div></td>
-								<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="hrg_jual['.($no-1).']" name="hrg_jual[]" value="'.$value['harga_jual'].'" ></div></td>
-								<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="qty['.($no-1).']" name="qty[]" value="'.$value['qty'].'" ></div></td>
-								<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="refund['.($no-1).']" name="refund[]" value="'.$value['harga_refund'].'" ></div></td>
-								<td class="hidden-xs">
-									<div class="btn-group" align="center">
-										<button class="btn btn-sm btn-danger" type="button" data-toggle="tooltip" title="Remove Client" onClick="action_list(\'delete\',\'delete\','.$transaksi_detail_id.');"><i class="fa fa-trash-o"></i></button>
-									</div>
-								</td>
-							</tr>';
-
-		}
-		
 	}
 	else if(isset($_GET['toko']))
 	{

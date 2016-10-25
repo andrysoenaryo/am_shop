@@ -12,7 +12,7 @@
     </div>
     <div class="block-content tab-content">
         <div class="tab-pane active" id="tab-list">
-            <div class="table-responsive"><table id="table_transaksi" ></table></div>
+            <div class="table-responsive"><table id="table_transaksi2" ></table></div>
         </div>
         <div class="tab-pane" id="tab-form">
             <div id="form" class="form-horizontal push-10-t">
@@ -136,8 +136,8 @@
                 <div class="form-group">-->
                     <div required class="col-sm-4">
                         <div class="form-material form-material-info ">
-                            <input type="text" class="form-control input-sm" id="refund" name="refund" >
-                            <label for="refund">Nominal Refund</label>
+                            <input type="text" class="form-control input-sm" id="harga_refund" name="harga_refund" >
+                            <label for="harga_refund">Nominal Refund</label>
                         </div>
                     </div>
                 </div>
@@ -156,41 +156,7 @@
                 </div>
             <!--</form>-->
             </div> 
-            <!--<div id="trx_detail" class="col-sm-12" style="display:none;">
-            	<div class="col-sm-12">
-                    <table class="table table-striped table-borderless table-header-bg table-bordered">
-                        <thead>
-                            <tr>
-                                <th class="text-center" valign="middle" style="width: 80px; vertical-align:central;">
-                                    <a href="#" onClick="return addRow()"  class="addRow btn-sm btn-success"> <i class="glyphicon glyphicon-plus"></i></a>
-                                    <a href="#" onClick="return removeRow()"  style="display:none" class="removeRow btn-sm btn-danger"> <i class="glyphicon glyphicon-minus"></i></a>
-                                </th>
-                                <th>Product</th>
-                                <th class="hidden-xs" style="width: 15%;">Supplier</th>
-                                <th class="hidden-xs" style="width: 100px;">Harga Supplier</th>
-                                <th class="text-center" style="width: 100px;">Harga Jual</th>
-                                <th class="text-center" style="width: 100px;">Qty</th>
-                                <th class="hidden-xs" style="width: 100px;">Nominal Refund</th>
-                                <th class="hidden-xs" style="width: 70px;">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bodyadd">
-                       </tbody>
-                    </table>
-                </div>
-                <div class="col-sm-12" align="right">
-                    <div id='add_div'>
-                    <?php if($_SESSION['menu'][$_GET['id_menu']]['tambah']=='Y'){ $disable_tambah = '';}else{ $disable_tambah = 'disabled';}?>
-                        <button <?php echo $disable_tambah;?> class="btn btn-sm btn-primary" onClick="action_list('simpan');"> Simpan </button>
-                        <button class="btn btn-sm btn-danger" onClick="action_list('back');"> Batal </button>
-                    </div>
-                    <div id='edit_div' style="display:none;">
-                        <button class="btn btn-sm btn-primary" onClick="action_list('simpan');"> Edit </button>
-                        <button class="btn btn-sm btn-danger" onClick="action_list('back');"> Batal </button>
-                    </div>
-                </div>
-            </div>          
-        </div>-->
+        </div>
     </div>
 
 
@@ -222,186 +188,11 @@
 
 <script>
 
-//selectLoad();
-function addRow()
-{
-	var count_length = count_list()+1;
-	var rownum = count_list()-1;
-	if(count_length > 1){
-		$('.removeRow').show();
-	}
-		
-	var data = '<tr class="list">\
-		<td class="text-center">'+count_length+'</td>\
-		<td class="text-left"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="product['+rownum+']" name="product[]" ></div></td>\
-		<td class="text-left"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="supplier['+rownum+']" name="supplier[]" ></div></td>\
-		<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="hrg_supplier['+rownum+']" name="hrg_supplier[]" ></div></td>\
-		<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="hrg_jual['+rownum+']" name="hrg_jual[]" ></div></td>\
-		<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="qty['+rownum+']" name="qty[]" ></div></td>\
-		<td class="text-right"><div class="form-material form-material-info "><input class="form-control input-sm" type="text" id="refund['+rownum+']" name="refund[]" ></div></td>\
-		<td class="hidden-xs">\
-			<div class="btn-group" align="center">\
-				<button class="btn btn-sm btn-danger" type="button" data-toggle="tooltip" title="Remove Client" ><i class="fa fa-trash-o"></i></button>\
-			</div>\
-		</td>\
-	</tr>';
-		
-	$(".bodyadd").append(data);
-	App.initHelpers(['datepicker','select2']);
-		
-}
-
-function removeRow()
-{
-	$('.list').slice(-1).remove();
-	if(count_list() < 2){
-		$('.removeRow').hide();
-		return false;
-	}
-}
-
-function count_list()
-{
-	
-	if($('.list_exist').length>0) { var length_list = $('.list_exist').length;}else{ var length_list = $('.list').length;}
-	if( length_list == 1 ){ 
-		$('.removeRow').hide();	
-	}
-	return length_list;
-}
-
-function list_data_detail(transaksi_id)
-{
-	var URL = 'transaksi/model/mod_transaksi_jual.php';
-	var act = act;
-	
-	$.ajax({
-		type: 'POST',
-		url: URL,
-		data: {
-				 'transaksi_id'		: transaksi_id,
-				 'grid_table_list'	: 1
-		},
-		dataType: 'json',
-		cache: false,
-		success: function(data) 
-		{
-			/*var bnyk_data = data.product.lenght;
-			if(parseInt(data.product.lenght)>0)
-			{*/
-				$("#trx_detail").css('display', 'block');
-				$(".bodyadd").append(data.form);
-				App.initHelpers(['datepicker']);
-			//}
-		}
-	});
-	
-}
-
-function action_list(act,tab,id)
-{
-	var URL = 'transaksi/model/mod_transaksi_jual.php';
-	var act = act;
-	if(act=='simpan')
-	{
-	
-		var products = $('input[name="product[]"]').map(function(){ 
-							return this.value; 
-						}).get();
-		
-		var suppliers = $('input[name="supplier[]"]').map(function(){ 
-							return this.value; 
-						}).get();
-						
-		var hrg_suppliers = $('input[name="hrg_supplier[]"]').map(function(){ 
-							return this.value; 
-						}).get();
-						
-		var hrg_juals = $('input[name="hrg_jual[]"]').map(function(){ 
-							return this.value; 
-						}).get();
-						
-		var qtys = $('input[name="qty[]"]').map(function(){ 
-							return this.value; 
-						}).get();
-						
-		var refunds = $('input[name="refund[]"]').map(function(){ 
-							return this.value; 
-						}).get();
-		
-		var transaksi_detail_id = $('input[name="transaksi_detail_id[]"]').map(function(){ 
-							return this.value; 
-						}).get();
-						
-		var URL = 'transaksi/model/mod_transaksi_jual.php';
-		var act = act;
-		
-		$.ajax({
-			type: 'POST',
-			url: URL,
-			data: {
-					 'product[]'				: products,
-					 'supplier[]'				: suppliers,
-					 'hrg_supplier[]'			: hrg_suppliers,
-					 'hrg_jual[]'				: hrg_juals,
-					 'qty[]'					: qtys,
-					 'refund[]'					: refunds,
-					 'transaksi_detail_id[]'	: transaksi_detail_id,
-					 'transaksi_id'				: $("#transaksi_id").val(),
-					 'status_list'				: 'simpan',
-					 'simpan_list'				: 1
-			},
-			dataType: 'json',
-			cache: false,
-			success: function(data) 
-			{
-				if(data.error)
-				{
-					alertMSG('danger',data.message);
-				}else{
-					alertMSG('success',data.message);
-				}
-				
-				$('.list_exist').remove();
-				$('.list').remove();
-				list_data_detail($("#transaksi_id").val());
-			}
-		});
-	}
-	else if(act=='delete')
-	{
-		$.ajax({
-			url:URL,
-			type: 'POST',
-			dataType: 'json',
-			data:{
-				'status_list'			: 'delete',
-				'simpan_list'			: 1,
-				'transaksi_detail_id'	: id
-			},
-			success:function(data){				
-				if(data.error)
-				{
-					alertMSG('danger',data.message);
-				}else{
-					alertMSG('success',data.message);
-				}
-				$('.list_exist').remove();
-				$('.list').remove();
-				list_data_detail($("#transaksi_id").val());
-			}
-		});	
-		
-	}
-}
-
-
-
 $(function() 
 {
 	
-	$('#table_transaksi').bootstrapTable({
-		url				: 'transaksi/model/mod_transaksi_jual.php',
+	$('#table_transaksi2').bootstrapTable({
+		url				: 'transaksi/model/mod_transaksi_jual2.php',
 		method			: 'get',
 		dataType		: 'json',
 		queryParams		: {
@@ -440,7 +231,7 @@ $(document).ready(function () {
 	$.ajax({
 			type: "GET",
 			dataType: "json",
-			url: 'transaksi/model/mod_transaksi_jual.php?toko=1'
+			url: 'transaksi/model/mod_transaksi_jual2.php?toko=1'
 		}).done(function( data, responce ) {
 				var component = "";
 				$.each(data, function(key,val){
@@ -454,6 +245,7 @@ $(document).ready(function () {
 
 function clearAll()
 {
+	$("#transaksi_id").val();
 	$("#toko_id").val();
 	$("#tgl_trx").val();
 	$("#inv_trx").val();
@@ -462,13 +254,17 @@ function clearAll()
 	$("#no_hp").val();
 	$("#no_resi").val();
 	$("#status").val();
-	$('.list').remove();
-	$('.list_exist').remove();
+	$("#product").val();
+	$("#supplier").val();
+	$("#harga_supplier").val();
+	$("#harga_jual").val();
+	$("#qty").val();
+	$("#harga_refund").val();
 }
 
 function action(act,tab,id)
 {
-	var URL = 'transaksi/model/mod_transaksi_jual.php';
+	var URL = 'transaksi/model/mod_transaksi_jual2.php';
 	var act = act;
 	if(act=='back')
 	{
@@ -489,7 +285,6 @@ function action(act,tab,id)
 			},
 			success:function(data){				
 				nextTabs();
-				list_data_detail(data.transaksi_id);
 				$("#transaksi_id").val(data.transaksi_id);
 				$("#toko_id").select2("val", data.toko_id);
 				$("#tgl_trx").val(data.tgl_trx);
@@ -499,6 +294,14 @@ function action(act,tab,id)
 				$("#no_hp").val(data.no_hp);
 				$("#no_resi").val(data.no_resi);
 				$("#status_trx").val(data.status_trx);
+				
+				$("#product").val(data.product);
+				$("#supplier").val(data.supplier);
+				$("#harga_supplier").val(data.harga_supplier);
+				$("#harga_jual").val(data.harga_jual);
+				$("#qty").val(data.qty);
+				$("#harga_refund").val(data.harga_refund);
+				
 				$("#status").val(act);
 				$("#add_div").css('display', 'none');
 				$("#edit_div").css('display', 'block');
@@ -522,7 +325,14 @@ function action(act,tab,id)
 				'no_hp'			: $("#no_hp").val(),
 				'no_resi'		: $("#no_resi").val(),
 				'status_trx'	: $("#status_trx").val(),
-				'status'		: $("#status").val()
+				'status'		: $("#status").val(),
+				'product'		: $("#product").val(),
+				'supplier'		: $("#supplier").val(),
+				'harga_supplier': $("#harga_supplier").val(),
+				'harga_jual'	: $("#harga_jual").val(),
+				'qty'			: $("#qty").val(),
+				'harga_refund'	: $("#harga_refund").val()
+				
 			},
 			success:function(data){				
 				//alert(data.message);
@@ -531,21 +341,10 @@ function action(act,tab,id)
 					alertMSG('danger',data.message);
 				}else{
 					alertMSG('success',data.message);
-					
-					$("#transaksi_id").val(data.transaksi_id);
-					$("#trx_detail").css('display', 'block');
-					$("#toko_id").prop('disabled', true);
-					$("#tgl_trx").prop('disabled', true);
-					$("#inv_trx").prop('readonly', true);
-					$("#nama").prop('readonly', true);
-					$("#alamat").prop('readonly', true);;
-					$("#no_hp").prop('readonly', true);
-					$("#no_resi").prop('readonly', true);
-					
 				}
-				//backTabs();
-				//$('#table_transaksi').bootstrapTable('refresh');
-				//clearAll();
+				backTabs();
+				$('#table_transaksi2').bootstrapTable('refresh');
+				clearAll();
 			}
 		});	
 	}
@@ -567,7 +366,7 @@ function action(act,tab,id)
 					alertMSG('success',data.message);
 				}
 				backTabs();
-				$('#table_transaksi').bootstrapTable('refresh');
+				$('#table_transaksi2').bootstrapTable('refresh');
 				clearAll();
 			}
 		});	

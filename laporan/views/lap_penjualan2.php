@@ -3,7 +3,7 @@
 	<div class="block">
         <ul class="nav nav-tabs nav-tabs-alt" data-toggle="tabs">
             <li class="active">
-                <a href="#tab-form" >Laporan Penjualan</a>
+                <a href="#tab-form" >Laporan Penjualan 2</a>
             </li>
         </ul>
     </div>
@@ -57,7 +57,7 @@
             </div> 
             <div id="lap_detail" class="col-sm-12" style="display:none;">
             	<div class="col-sm-12">
-                   <div class="table-responsive "><table id="table_lap_penjualan" data-show-export="true"></table></div>
+                   <div class="table-responsive "><table id="table_lap_penjualan2" data-show-export="true"></table></div>
                 </div>
             </div>          
         </div>
@@ -102,8 +102,8 @@ function loadReport()
 		if($("#status_trx").val()!=''){ var status_trx = $("#status_trx").val();}else{ var status_trx = 'xxx';}
 		
 		
-		$('#table_lap_penjualan').bootstrapTable({
-			url				: 'laporan/model/mod_lap_penjualan.php',
+		$('#table_lap_penjualan2').bootstrapTable({
+			url				: 'laporan/model/mod_lap_penjualan2.php',
 			method			: 'GET',
 			dataType		: 'json',
 			queryParams		: {
@@ -149,8 +149,10 @@ function loadReport()
 	}
 
 	function sumFormatter(data) {
+		
 		field = this.field;
 		var total_sum = data.reduce(function(sum, row) {
+			console.log(sum);
 			return (sum) + (row[field] || 0);
 		}, 0);
 		return total_sum;
@@ -163,7 +165,7 @@ function clearAll()
 	$("#tanggal_to").val();
 	$("#status_trx").val();
 	$("#lap_detail").css('display', 'none');
-	$('#table_lap_penjualan').bootstrapTable('refresh');
+	$('#table_lap_penjualan2').bootstrapTable('refresh');
 }
 
 function action(act)
@@ -171,7 +173,7 @@ function action(act)
 	$("#lap_detail").css('display', 'none');
 	$("#lap_detail").css('display', 'block');
 	loadReport();
-	$('#table_lap_penjualan').bootstrapTable('refresh');
+	$('#table_lap_penjualan2').bootstrapTable('refresh');
 }
 </script>
 
