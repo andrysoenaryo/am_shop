@@ -289,7 +289,7 @@ function action(act,tab,id)
 				$("#toko_id").select2("val", data.toko_id);
 				$("#tgl_trx").val(data.tgl_trx);
 				$("#inv_trx").val(data.inv_trx);
-				$("#nama").val(data.inv_trx);
+				$("#nama").val(data.nama);
 				$("#alamat").val(data.alamat);
 				$("#no_hp").val(data.no_hp);
 				$("#no_resi").val(data.no_resi);
